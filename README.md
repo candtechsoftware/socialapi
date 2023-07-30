@@ -4,15 +4,17 @@
  - posgres 
  - docker 
  - docker-compose cli 
- - diesel cli (if you want to run migrations)
+ - diesel cli (To setup the database and if you want to run migrations)
  - insomnia (api testing client)
 
 ## Running the application 
 
 You must start the docker container with
 `docker compose up -d`
-then you can run 
-`cargo run`
+then you can run. First you will need to in the api directory
+`cd api`
+`diesel setup` // only need to do this once 
+`make run`
 
 ## Testing 
 I have included an export file named `insomnia_export` which you and import into 
