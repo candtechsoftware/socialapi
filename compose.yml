@@ -1,0 +1,39 @@
+name: socialapi
+services:
+  api:
+    build:
+      context: api 
+      target: development
+    environment:
+      - ADDRESS=0.0.0.0:8000
+      - RUST_LOG=debug
+      - PG_DBNAME=postgres
+      - PG_HOST=db
+      - PG_USER=postgres
+      - PG_PASSWORD=mysecretpassword
+    networks:
+      - server-side
+    volumes:
+      - ./api/src:/code/src
+      - api-cache:/code/target
+    depends_on:
+      - db
+
+  db:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    networks:
+      - server-side
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+networks:
+  server-side: {}
+
+volumes:
+  api-cache: {}
+  db-data: {}
