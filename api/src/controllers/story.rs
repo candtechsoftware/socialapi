@@ -11,15 +11,21 @@ pub async fn add_story(
     repository: StoryRepository,
 ) -> ControllerResult<impl warp::Reply> {
     let mut r = repository.clone();
-    let story = r
+    match r
         .create_user_story(new_story, user_id.parse().unwrap())
         .await
-        .expect("Error creating a story");
-    Ok(Box::new(warp::reply::json(&Response {
-        status: super::ResponseStatus::SUCCESS,
-        failuer_reason: None,
-        body: Some(story),
-    })))
+    {
+        Ok(s) => Ok(Box::new(warp::reply::json(&Response {
+            status: super::ResponseStatus::SUCCESS,
+            failuer_reason: None,
+            body: Some(s),
+        }))),
+        Err(err) => Ok(Box::new(warp::reply::json(&Response::<Story> {
+            status: super::ResponseStatus::SUCCESS,
+            failuer_reason: Some(err.to_string()),
+            body: None,
+        }))),
+    }
 }
 
 pub async fn get_story(

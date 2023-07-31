@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use diesel;
 use diesel::prelude::*;
+use diesel::{self};
 
 use super::{DbPool, RespositoryResult, RespositoryTrait};
 use crate::{
@@ -73,13 +73,16 @@ impl StoryRepository {
             user_id,
             story_id: new_story.id().unwrap(),
         };
-        diesel::insert_into(user_story::table)
+        match diesel::insert_into(user_story::table)
             .values(user_story_item)
             .execute(&mut conn)
-            .expect("Error creating user story join table row");
-
-        StoryNoticationService::notify(user_id).await;
-        Ok(new_story)
+        {
+            Ok(_) => {
+                StoryNoticationService::notify(user_id).await;
+                return Ok(new_story);
+            }
+            Err(err) => Err(err), // TODO should ensure things are cleaned up correctly in case of an error
+        }
     }
     pub fn get_user_stories(&mut self, story_user_id: i32) -> RespositoryResult<UserWithStories> {
         use crate::schema::user_story::dsl::*;
