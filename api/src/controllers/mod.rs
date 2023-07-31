@@ -10,6 +10,7 @@ pub type ControllerResult<R> = Result<R, Infallible>;
 #[derive(Serialize, Deserialize)]
 pub struct Response<T> {
     status: ResponseStatus,
+    failuer_reason: Option<String>,
     body: Option<T>,
 }
 

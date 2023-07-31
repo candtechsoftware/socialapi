@@ -26,7 +26,7 @@ pub fn with_repository<T>(
 
 pub fn create_routes(
     dbpool: DbPool,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     let log = warp::log::custom(|info| {
         eprintln!("{} {} {:?}", info.method(), info.path(), info.elapsed())
     });

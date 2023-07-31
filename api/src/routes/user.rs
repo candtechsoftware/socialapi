@@ -12,7 +12,7 @@ use super::{json_body, with_repository};
 
 pub fn create_user_routes(
     dbpool: DbPool,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     let user_repository = UserAccountRepository { 0: dbpool.clone() };
     get_user(user_repository.clone().borrow_mut())
         .or(update_user(user_repository.clone().borrow_mut()))
@@ -25,7 +25,7 @@ pub fn create_user_routes(
 /// path: /user/{id}
 fn get_user(
     repo: &mut UserAccountRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("user" / String)
         .and(warp::get())
         .and(with_repository(repo.clone()))
@@ -36,7 +36,7 @@ fn get_user(
 /// path: /user/{id}
 fn update_user(
     repo: &mut UserAccountRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("user" / String)
         .and(warp::put())
         .and(json_body::<UserAccount>())
@@ -48,7 +48,7 @@ fn update_user(
 /// path: /user/{id}
 fn delete_user(
     repo: &mut UserAccountRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("user" / String)
         .and(warp::delete())
         .and(with_repository(repo.clone()))
@@ -60,7 +60,7 @@ fn delete_user(
 /// body: { UserAccount }
 fn create_user(
     repo: &mut UserAccountRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("user")
         .and(warp::post())
         .and(json_body::<UserAccount>())
@@ -72,7 +72,7 @@ fn create_user(
 /// path: /users
 fn get_users(
     repo: &mut UserAccountRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("users")
         .and(warp::get())
         .and(with_repository(repo.clone()))

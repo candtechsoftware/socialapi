@@ -5,6 +5,7 @@
  - docker 
  - docker-compose cli 
  - diesel cli (To setup the database and if you want to run migrations)
+    `cargo install diesel_cli --no-default-features --features postgres`
  - insomnia (api testing client)
 
 ## Running the application 
@@ -22,3 +23,4 @@ insomnia and hit the api with insomnia or use the `copy to curl` option to use p
 
 ## Other Notes 
 I left the debug binary if you would like to run the binary (note it the binary was compiled on a M2 mac so it may not work but running cargo new should work)
+Creating a story throws and error you will need to have a valid `user_id` and same goes with comments must have a valid `story_id`

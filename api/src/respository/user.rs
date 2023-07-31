@@ -26,11 +26,11 @@ impl RespositoryTrait<UserAccount> for UserAccountRepository {
 
     fn get_one(&mut self, model_id: i32) -> RespositoryResult<UserAccount> {
         use crate::schema::user_account::dsl::*;
-        let user = user_account
-            .find(model_id)
-            .first::<UserAccount>(&mut self.0.get().expect("Error getting connection"))
-            .expect("Error getting a single user");
-        Ok(user)
+         match user_account.find(model_id)
+            .first::<UserAccount>(&mut self.0.get().expect("Error getting connection")) {
+                Ok(user) => Ok(user),
+                Err(err) => Err(err)
+            }
     }
 
     fn update(&mut self, model_id: i32, model: UserAccount) -> RespositoryResult<UserAccount> {

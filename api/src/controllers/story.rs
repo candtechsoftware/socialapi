@@ -15,7 +15,11 @@ pub async fn add_story(
         .create_user_story(new_story, user_id.parse().unwrap())
         .await
         .expect("Error creating a story");
-    Ok(Box::new(warp::reply::json(&story)))
+    Ok(Box::new(warp::reply::json(&Response {
+        status: super::ResponseStatus::SUCCESS,
+        failuer_reason: None,
+        body: Some(story),
+    })))
 }
 
 pub async fn get_story(
@@ -26,7 +30,11 @@ pub async fn get_story(
         .clone()
         .get_one(story_id.parse().unwrap())
         .expect("Error getting single story");
-    Ok(Box::new(warp::reply::json(&story)))
+    Ok(Box::new(warp::reply::json(&Response {
+        status: super::ResponseStatus::SUCCESS,
+        failuer_reason: None,
+        body: Some(story),
+    })))
 }
 
 pub async fn get_stories(
@@ -38,6 +46,7 @@ pub async fn get_stories(
         .expect("Error getting all stories");
     Ok(Box::new(warp::reply::json(&Response {
         status: super::ResponseStatus::SUCCESS,
+        failuer_reason: None,
         body: Some(stories),
     })))
 }
@@ -52,6 +61,7 @@ pub async fn delete_story(
         .expect("Error deleting a story");
     Ok(Box::new(warp::reply::json(&Response::<Story> {
         status: super::ResponseStatus::SUCCESS,
+        failuer_reason: None,
         body: None,
     })))
 }
@@ -67,6 +77,7 @@ pub async fn update_story(
         .expect("Error updatting a story");
     Ok(Box::new(warp::reply::json(&Response::<Story> {
         status: super::ResponseStatus::SUCCESS,
+        failuer_reason: None,
         body: Some(story),
     })))
 }
@@ -79,6 +90,7 @@ pub async fn get_user_stories(
     let user_stories = r.get_user_stories(user_id.parse().unwrap()).unwrap();
     Ok(Box::new(warp::reply::json(&Response {
         status: super::ResponseStatus::SUCCESS,
+        failuer_reason: None,
         body: Some(user_stories),
     })))
 }

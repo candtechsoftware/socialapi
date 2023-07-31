@@ -12,7 +12,7 @@ use super::{json_body, with_repository};
 
 pub fn create_story_routes(
     dbpool: DbPool,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     let story_repository = StoryRepository { 0: dbpool };
     get_story(story_repository.clone().borrow_mut())
         .or(create_story(story_repository.clone()))
@@ -26,7 +26,7 @@ pub fn create_story_routes(
 /// path: /story/{id}
 fn get_story(
     repo: &mut StoryRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("story" / String)
         .and(warp::get())
         .and(with_repository(repo.clone()))
@@ -37,7 +37,7 @@ fn get_story(
 /// path: /story/{id}
 fn update_story(
     repo: &mut StoryRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("story" / String)
         .and(warp::put())
         .and(json_body::<Story>())
@@ -49,7 +49,7 @@ fn update_story(
 /// path: /story/{id}
 fn delete_story(
     repo: &mut StoryRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("story" / String)
         .and(warp::delete())
         .and(with_repository(repo.clone()))
@@ -61,7 +61,7 @@ fn delete_story(
 /// body: { Story }
 fn create_story(
     repo: StoryRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("user" / String / "story")
         .and(warp::post())
         .and(json_body::<Story>())
@@ -73,7 +73,7 @@ fn create_story(
 /// path: user/{id}/stories     TODO: Find a better place for this route
 fn get_user_stories(
     repo: StoryRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("user" / String / "story")
         .and(warp::get())
         .and(warp::any().map(move || repo.clone()))
@@ -84,7 +84,7 @@ fn get_user_stories(
 /// path: /storys
 fn get_stories(
     repo: &mut StoryRepository,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone {
     warp::path!("stories")
         .and(warp::get())
         .and(with_repository(repo.clone()))

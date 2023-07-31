@@ -17,6 +17,7 @@ pub async fn add_comment(
     Ok(Box::new(warp::reply::json(&Response {
         status: super::ResponseStatus::SUCCESS,
         body: Some(comment),
+        failuer_reason: None
     })))
 }
 
@@ -31,6 +32,7 @@ pub async fn get_comment(
     Ok(Box::new(warp::reply::json(&Response {
         status: super::ResponseStatus::SUCCESS,
         body: Some(comment),
+        failuer_reason: None
     })))
 }
 
@@ -44,6 +46,7 @@ pub async fn get_comments(
     Ok(Box::new(warp::reply::json(&Response {
         status: super::ResponseStatus::SUCCESS,
         body: Some(comments),
+        failuer_reason: None
     })))
 }
 
@@ -58,6 +61,7 @@ pub async fn delete_comment(
     Ok(Box::new(warp::reply::json(&Response::<Comment> {
         status: super::ResponseStatus::SUCCESS,
         body: None,
+        failuer_reason: None
     })))
 }
 
@@ -73,6 +77,7 @@ pub async fn update_comment(
     Ok(Box::new(warp::reply::json(&Response {
         status: super::ResponseStatus::SUCCESS,
         body: Some(comment),
+        failuer_reason: None
     })))
 }
 
@@ -85,5 +90,6 @@ pub async fn get_all_story_comments(
     Ok(Box::new(warp::reply::json(&Response {
         status: super::ResponseStatus::SUCCESS,
         body: Some(story_with_comments),
+        failuer_reason: None
     })))
 }

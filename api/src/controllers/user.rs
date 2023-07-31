@@ -13,6 +13,7 @@ pub async fn add_user(
         Ok(user) => Ok(Box::new(warp::reply::json(&Response::<UserAccount> {
             status: super::ResponseStatus::SUCCESS,
             body: Some(user),
+            failuer_reason: None,
         }))),
         Err(err) => Ok(Box::new(warp::reply::json(&format!(
             "Error creating a user: {:?}",
@@ -25,14 +26,23 @@ pub async fn get_user(
     user_id: String,
     repository: impl RespositoryTrait<UserAccount>,
 ) -> ControllerResult<impl warp::Reply> {
+    println!("SDS");
     let user = repository
         .clone()
-        .get_one(user_id.parse().unwrap())
-        .expect("Error getting single user");
-    Ok(Box::new(warp::reply::json(&Response {
-        status: super::ResponseStatus::SUCCESS,
-        body: Some(user),
-    })))
+        .get_one(user_id.parse().unwrap());
+    match user {
+        Ok(u) => Ok(Box::new(warp::reply::json(&Response {
+            status: super::ResponseStatus::FAILED,
+            failuer_reason: None,
+            body: Some(u)
+        }))),
+        Err(err) => Ok(Box::new(warp::reply::json(&Response::<UserAccount> {
+            status: super::ResponseStatus::FAILED,
+            failuer_reason: Some(err.to_string()),
+            body: None
+        })))
+    }
+    
 }
 
 pub async fn get_users(
@@ -44,6 +54,7 @@ pub async fn get_users(
         .expect("Error getting all users");
     Ok(Box::new(warp::reply::json(&Response {
         status: super::ResponseStatus::SUCCESS,
+        failuer_reason: None,
         body: Some(users),
     })))
 }
@@ -58,6 +69,7 @@ pub async fn delete_user(
         .expect("Error deleting a user");
     Ok(Box::new(warp::reply::json(&Response::<UserAccount> {
         status: super::ResponseStatus::SUCCESS,
+        failuer_reason: None,
         body: None,
     })))
 }
@@ -73,6 +85,7 @@ pub async fn update_user(
         .expect("Error updatting a user");
     Ok(Box::new(warp::reply::json(&Response::<UserAccount> {
         status: super::ResponseStatus::SUCCESS,
+        failuer_reason: None,
         body: Some(user),
     })))
 }
